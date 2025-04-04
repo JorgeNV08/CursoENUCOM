@@ -34,11 +34,12 @@ public class ReservaWS {
 	
 	@PostMapping("api/reservas")
 	public ResponseEntity<?> crearReserva(@RequestBody Reserva reserva){
-		Reserva nuevaReserva = 	service.guardar(reserva);
-		if(nuevaReserva!=null)
-			return ResponseEntity.status(HttpStatus.OK).body(reserva);
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("mensaje: La sala ya está reservada para el horario especificado");
-		
+		try {
+	        Reserva nuevaReserva = service.guardar(reserva);
+	        return ResponseEntity.status(HttpStatus.OK).body(nuevaReserva);
+	    } catch (IllegalArgumentException e) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("mensaje: " + e.getMessage());
+	    } 
 	}
 	
 	@DeleteMapping("api/reservas/{idReserva}")
